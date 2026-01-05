@@ -59,3 +59,35 @@ When the user uses `/plan`:
    - Goal summary
    - Files to change
    - New files to add
+   - Commands to run (smoke tests)
+   - Risks and rollback plan
+2) Implement changes incrementally with small commits.
+3) Run smoke tests and paste logs into the PR description.
+
+## Required verification for any change
+At minimum, run one of:
+- `python -c "import chemprop; print(chemprop.__version__)"` (or equivalent)
+- A tiny “load data + one forward pass” script
+- A 1-epoch tiny training run on 256–1024 rows
+
+If smoke tests fail, fix them before opening a PR.
+
+## Logging and artifacts
+When adding diagnostics utilities, write outputs to a user-specified `--outdir` and produce JSON artifacts like:
+- label counts per task
+- per-task mean/std/min/max on finite labels only
+- number of zero-labeled batches under current batching rules
+
+## Branch and PR conventions
+- Branch names: `agent/<short-topic>` (example: `agent/nan-safe-scaler`)
+- PR description must include:
+  - Summary of changes
+  - Files changed
+  - Smoke test commands + output
+  - How to disable/rollback (flags or revert commit)
+
+## Security and data handling
+- Do not exfiltrate data. Do not paste large datasets into chat.
+- If you need dataset stats, compute them locally and summarize.
+
+End of instructions.
